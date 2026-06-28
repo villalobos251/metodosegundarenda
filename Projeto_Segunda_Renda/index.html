@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Método Segunda Renda</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Cyberpunk / Synthwave Theme */
+        :root {
+            --bg-color: #05020B;
+            --surface: rgba(15, 8, 30, 0.8);
+            --primary: #FF007F; /* Neon Pink */
+            --secondary: #00F0FF; /* Neon Cyan */
+            --text-main: #FFFFFF;
+            --text-muted: #B0A8C2;
+            --danger: #FF3366;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated Grid Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100vh;
+            background-image: 
+                linear-gradient(rgba(255,0,127,0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,240,255,0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            transform: perspective(500px) rotateX(60deg) scale(2);
+            transform-origin: center top;
+            animation: moveGrid 10s linear infinite;
+        }
+
+        @keyframes moveGrid {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 50px; }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 80px 0 60px;
+            text-align: center;
+            position: relative;
+            background: radial-gradient(circle at top, rgba(255,0,127,0.15) 0%, transparent 60%);
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 10%; left: 20%;
+            width: 300px; height: 300px;
+            background: var(--secondary);
+            filter: blur(150px);
+            opacity: 0.3;
+            z-index: -1;
+            animation: floatOrb 8s infinite alternate ease-in-out;
+        }
+
+        @keyframes floatOrb {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(100px, 50px); }
+        }
+
+        .headline {
+            font-size: 3rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 24px;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            text-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+        }
+
+        .headline span {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+
+        .subheadline {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 800px;
+            margin: 0 auto 40px;
+        }
+
+        /* Floating Money Emojis */
+        .money-particle {
+            position: absolute;
+            font-size: 2rem;
+            pointer-events: none;
+            opacity: 0;
+            z-index: 15;
+            transition: opacity 0.5s;
+        }
+
+        /* CTAs */
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: #0F081E;
+            font-size: 1.3rem;
+            font-weight: 800;
+            padding: 20px 50px;
+            border-radius: 50px;
+            text-decoration: none;
+            text-transform: uppercase;
+            box-shadow: 0 0 30px rgba(255,0,127,0.6), 0 0 10px rgba(0,240,255,0.4);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid transparent;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: 0.5s;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05) translateY(-5px);
+            box-shadow: 0 0 50px rgba(255,0,127,0.8), 0 0 30px rgba(0,240,255,0.6);
+            border-color: #fff;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        /* Sections */
+        section {
+            padding: 80px 0;
+            position: relative;
+        }
+
+        section::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 10%; width: 80%; height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary), var(--secondary), transparent);
+            opacity: 0.5;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 40px;
+            text-shadow: 0 0 10px rgba(255,255,255,0.2);
+        }
+
+        .section-title span {
+            color: var(--secondary);
+            text-shadow: 0 0 20px rgba(0,240,255,0.5);
+        }
+
+        .content-block {
+            background: var(--surface);
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            border: 1px solid rgba(0,240,255,0.2);
+            backdrop-filter: blur(10px);
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .content-block::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        .content-block p {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+
+        .content-block p:last-child {
+            margin-bottom: 0;
+        }
+
+        .highlight-text {
+            font-weight: 600;
+            color: var(--primary);
+            text-shadow: 0 0 10px rgba(255,0,127,0.5);
+        }
+
+        /* Animated Custom Bullet Points */
+        .custom-bullet-list {
+            list-style: none;
+            padding: 0;
+            margin: 20px auto;
+            max-width: 600px;
+            text-align: left;
+        }
+        
+        .custom-bullet-list li {
+            position: relative;
+            padding-left: 35px;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        
+        .custom-bullet-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            width: 10px;
+            height: 10px;
+            background: var(--primary);
+            box-shadow: 0 0 10px var(--primary), 0 0 20px var(--secondary);
+            transform: rotate(45deg);
+            animation: pulseBullet 1.5s infinite alternate;
+        }
+        
+        @keyframes pulseBullet {
+            0% { transform: rotate(45deg) scale(0.8); box-shadow: 0 0 5px var(--primary); }
+            100% { transform: rotate(45deg) scale(1.3); box-shadow: 0 0 15px var(--primary), 0 0 30px var(--secondary); }
+        }
+
+        /* Lists */
+        .benefit-list {
+            list-style: none;
+        }
+
+        .benefit-list li {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 15px;
+            background: rgba(0,240,255,0.05);
+            border-radius: 12px;
+            border-left: 3px solid var(--secondary);
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+        
+        .benefit-list li:hover {
+            transform: translateX(10px);
+            background: rgba(0,240,255,0.1);
+        }
+
+        .benefit-list li::before {
+            content: "💎";
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        /* Pricing */
+        .pricing-box {
+            text-align: center;
+            background: rgba(10, 5, 20, 0.9);
+            border: 3px solid var(--primary);
+            padding: 50px 30px;
+            border-radius: 30px;
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+            box-shadow: 0 0 50px rgba(255,0,127,0.3), inset 0 0 30px rgba(255,0,127,0.2);
+            backdrop-filter: blur(15px);
+        }
+
+        .original-price {
+            text-decoration: line-through;
+            color: var(--danger);
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .price {
+            font-size: 5rem;
+            font-weight: 800;
+            color: var(--secondary);
+            line-height: 1;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(0,240,255,0.6);
+        }
+
+        .price-details {
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+        }
+
+        /* FAQ */
+        .faq-item {
+            background: var(--surface);
+            margin-bottom: 15px;
+            border-radius: 12px;
+            border: 1px solid rgba(0,240,255,0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .faq-item:hover {
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(255,0,127,0.2);
+        }
+
+        .faq-question {
+            padding: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--secondary);
+            font-size: 1.1rem;
+        }
+
+        .faq-answer {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            color: var(--text-muted);
+        }
+
+        .faq-item.active .faq-answer {
+            padding: 0 20px 20px;
+            max-height: 600px;
+        }
+
+        /* Testimonials Carousel */
+        .testimonials-section {
+            background: rgba(255, 0, 127, 0.05);
+            padding: 80px 0;
+            overflow: hidden;
+        }
+
+        .carousel-wrapper {
+            position: relative;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            padding: 20px 0;
+        }
+
+        .carousel-track {
+            display: flex;
+            gap: 20px;
+            width: max-content;
+        }
+
+        .track-left {
+            animation: scrollLeft 40s linear infinite;
+        }
+
+        .track-right {
+            animation: scrollRight 40s linear infinite;
+        }
+        
+        .carousel-track:hover {
+            animation-play-state: paused;
+        }
+
+        .testimonial-card {
+            width: 280px;
+            flex-shrink: 0;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 2px solid rgba(0, 240, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .testimonial-card:hover {
+            transform: scale(1.05);
+            border-color: var(--primary);
+            box-shadow: 0 0 25px rgba(255,0,127,0.4);
+            z-index: 10;
+        }
+
+        .testimonial-card img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        @keyframes scrollLeft {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        @keyframes scrollRight {
+            0% { transform: translateX(-50%); }
+            100% { transform: translateX(0); }
+        }
+
+        /* Scroll Animation Classes */
+        .animate-scroll {
+            opacity: 0;
+            transform: translateY(60px);
+            transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        
+        .animate-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .delay-1 { transition-delay: 0.1s; }
+        .delay-2 { transition-delay: 0.2s; }
+        .delay-3 { transition-delay: 0.3s; }
+
+        /* 3D Floating Book */
+        .floating-book {
+            width: 140px;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin: 0 auto 20px auto;
+            display: block;
+            box-shadow: 0 0 30px rgba(0,240,255,0.4), inset 0 0 10px rgba(255,0,127,0.3);
+            border: 2px solid rgba(0,240,255,0.3);
+            animation: floatBook 4s ease-in-out infinite;
+        }
+
+        @keyframes floatBook {
+            0%, 100% { transform: translateY(0) rotate(-2deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+        }
+
+        @media (max-width: 768px) {
+            .headline { font-size: 1.8rem; line-height: 1.3; }
+            .subheadline { font-size: 1rem; }
+            .section-title { font-size: 1.8rem; margin-bottom: 30px; }
+            .price { font-size: 2.8rem; }
+            .cta-button { font-size: 1rem; padding: 15px 20px; display: flex; text-align: center; justify-content: center; width: 100%; box-sizing: border-box; }
+            .content-block { padding: 25px 20px; }
+            .pricing-box { padding: 40px 20px; }
+            .hero { padding: 40px 0 30px; }
+            section { padding: 50px 0; }
+        }
+
+        .gear-particle {
+            position: absolute;
+            pointer-events: none;
+            z-index: 10;
+            opacity: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* Se money-particle existia sem CSS, essa regra garante o funcionamento */
+        }
+        
+        .gear-particle svg {
+            width: 40px;
+            height: 40px;
+            color: var(--secondary);
+            filter: drop-shadow(0 0 10px var(--primary));
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HERO SECTION -->
+    <header class="hero">
+        <div class="container animate-scroll visible">
+            <h1 class="headline">O plano para quem cansou de trabalhar muito... <br><span>e continuar no mesmo lugar.</span></h1>
+            <p class="subheadline">Descubra a habilidade digital que pessoas comuns estão aprendendo para construir uma segunda fonte de renda, mesmo começando do zero, sem precisar aparecer na internet e sem abandonar o emprego atual.</p>
+            
+            <div style="max-width: 320px; margin: 40px auto; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 50px rgba(0, 240, 255, 0.3), 0 0 0 2px rgba(0, 240, 255, 0.4); aspect-ratio: 9/16; position: relative; background: #000;">
+                <video 
+                    src="https://cupondesconto.com.br/wp-content/uploads/2026/06/vsl.mp4.mp4" 
+                    controls 
+                    playsinline 
+                    preload="metadata"
+                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
+                    Seu navegador não suporta a tag de vídeo.
+                </video>
+            </div>
+            
+            <a href="https://pay.kiwify.com.br/GSTfiod?SRC=INSTA" class="cta-button">QUERO COMEÇAR AGORA</a>
+        </div>
+    </header>
+
+    <!-- DOR: SE VOCÊ CHEGOU ATÉ AQUI -->
+    <section>
+        <div class="container">
+            <div class="content-block animate-scroll text-center" style="font-size: 1.2rem;">
+                <h2 class="section-title" style="font-size: 2rem;">Se você chegou até aqui...</h2>
+                <p>Existe uma boa chance de que esteja vivendo exatamente isso.</p>
+                <ul class="custom-bullet-list">
+                    <li>Você acorda cedo.</li>
+                    <li>Trabalha o dia inteiro.</li>
+                    <li>Faz hora extra quando aparece.</li>
+                    <li>Chega em casa cansado.</li>
+                </ul>
+                <p class="highlight-text" style="margin-top:30px; margin-bottom:10px;">No fim do mês...</p>
+                <ul class="custom-bullet-list">
+                    <li>O salário desaparece.</li>
+                    <li>O aluguel vence.</li>
+                    <li>O mercado fica mais caro.</li>
+                    <li>A gasolina sobe.</li>
+                    <li>A carne virou luxo.</li>
+                    <li>E qualquer imprevisto faz toda a sua organização financeira desmoronar.</li>
+                </ul>
+                <p>O problema é que você não trabalha pouco.<br>Muito pelo contrário.<br>Você trabalha demais.</p>
+                <p>Mesmo assim...<br>A sensação é de estar correndo sem sair do lugar.</p>
+                <p style="font-style: italic; color: var(--secondary); font-size: 1.4rem; margin-top: 30px;">"Será que vou viver assim para sempre?"</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- QUEBRA DE PADRÃO -->
+    <section style="background: rgba(255,0,127,0.05);">
+        <div class="container">
+            <h2 class="section-title animate-scroll">O problema <span>não é falta de esforço.</span></h2>
+            <div class="content-block text-center animate-scroll" style="background: transparent; box-shadow: none; border: none;">
+                <p style="font-size: 1.4rem; margin-bottom:20px;">O problema é depender de apenas uma única fonte de renda.</p>
+                
+                <ul class="custom-bullet-list">
+                    <li>Essa talvez seja a maior armadilha financeira que milhões de brasileiros enfrentam hoje.</li>
+                    <li>Enquanto você troca tempo por dinheiro... O dinheiro continua tendo um limite.</li>
+                    <li class="highlight-text">E basta uma demissão, uma doença ou uma crise para tudo mudar.</li>
+                </ul>
+                
+                <p style="margin-top:40px; margin-bottom:20px;">Agora observe algo interessante.<br>Existem pessoas comuns que continuam trabalhando normalmente... Mas construíram uma segunda fonte de renda aprendendo uma habilidade digital valorizada pelo mercado.</p>
+                
+                <ul class="custom-bullet-list">
+                    <li>Elas não nasceram ricas.</li>
+                    <li>Não tinham milhares de seguidores.</li>
+                    <li>Não eram especialistas em tecnologia.</li>
+                </ul>
+                
+                <p style="color: var(--secondary); font-weight: 700; margin-top:30px; font-size:1.2rem;">Apenas aprenderam uma habilidade que empresas pagam para ter.</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- SOLUÇÃO: MÉTODO -->
+    <section>
+        <div class="container">
+            <div class="content-block animate-scroll text-center">
+                <h2 class="section-title" style="margin-bottom: 20px;">Foi exatamente por isso que nasceu o <span>Método Segunda Renda.</span></h2>
+                <p>O Método Segunda Renda não promete dinheiro fácil.<br>Não promete riqueza da noite para o dia.<br>Não vende ilusões.</p>
+                <p style="color: var(--text-main); font-weight: 600; font-size: 1.2rem; margin-top: 20px;">Ele ensina uma habilidade real, utilizada diariamente por empresas que anunciam na internet e precisam atrair clientes.</p>
+                <p>Essa habilidade pode ser aprendida passo a passo, mesmo por quem nunca trabalhou no mercado digital.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- O QUE VAI APRENDER -->
+    <section style="background: rgba(0,240,255,0.02);">
+        <div class="container">
+            <h2 class="section-title animate-scroll">O que você <span>aprenderá</span></h2>
+            <ul class="benefit-list">
+                <li class="animate-scroll delay-1">Como funciona o mercado digital de forma simples.</li>
+                <li class="animate-scroll delay-2">Como pessoas comuns utilizam habilidades digitais para criar novas fontes de renda.</li>
+                <li class="animate-scroll delay-3">Como funciona o mercado de afiliados.</li>
+                <li class="animate-scroll delay-1">Como utilizar o Google Ads de forma estratégica.</li>
+                <li class="animate-scroll delay-2">Como criar campanhas do zero.</li>
+                <li class="animate-scroll delay-3">Como transformar visitantes em compradores.</li>
+                <li class="animate-scroll delay-1">Como desenvolver uma habilidade que pode acompanhar você pelos próximos anos.</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- PARA QUEM É -->
+    <section>
+        <div class="container">
+            <h2 class="section-title animate-scroll">Este treinamento <span>é para você que...</span></h2>
+            <ul class="benefit-list" style="max-width: 700px; margin: 0 auto;">
+                <li class="animate-scroll delay-1">Está cansado de depender apenas do salário.</li>
+                <li class="animate-scroll delay-2">Quer criar uma segunda fonte de renda.</li>
+                <li class="animate-scroll delay-3">Nunca trabalhou pela internet.</li>
+                <li class="animate-scroll delay-1">Não quer aparecer gravando vídeos.</li>
+                <li class="animate-scroll delay-2">Busca uma oportunidade baseada em uma habilidade real.</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- OBJEÇÕES (FAQ/TEXTO) -->
+    <section style="background: rgba(255,0,127,0.05);">
+        <div class="container">
+            <h2 class="section-title animate-scroll">Talvez você <span>esteja pensando...</span></h2>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+                <div class="content-block animate-scroll delay-1">
+                    <h3 style="color: var(--secondary); margin-bottom: 15px;">"Nunca trabalhei com isso."</h3>
+                    <p>Ótimo. O treinamento foi desenvolvido para quem está começando do absoluto zero.</p>
+                </div>
+                
+                <div class="content-block animate-scroll delay-2">
+                    <h3 style="color: var(--secondary); margin-bottom: 15px;">"Não entendo nada de tecnologia."</h3>
+                    <p>Você aprende exatamente como se alguém estivesse sentado ao seu lado. Sem linguagem complicada. Sem enrolação.</p>
+                </div>
+                
+                <div class="content-block animate-scroll delay-3">
+                    <h3 style="color: var(--secondary); margin-bottom: 15px;">"Preciso investir muito dinheiro?"</h3>
+                    <p>Não. Você pode começar pequeno e evoluir conforme ganha experiência.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BÔNUS -->
+    <section>
+        <div class="container">
+            <h2 class="section-title animate-scroll">Além do Método Segunda Renda, você também <span>recebe gratuitamente:</span></h2>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px;">
+                <div class="content-block animate-scroll delay-1" style="padding: 30px 25px; text-align: center;">
+                    <img src="bonus1.jpg" class="floating-book" alt="Capa Bônus 1">
+                    <h4 style="color: var(--secondary); margin-bottom: 15px; font-size: 1.2rem;">Bônus 1:<br>Mentalidade da Segunda Renda</h4>
+                </div>
+                <div class="content-block animate-scroll delay-2" style="padding: 30px 25px; text-align: center;">
+                    <img src="bonus2.jpg" class="floating-book" alt="Capa Bônus 2">
+                    <h4 style="color: var(--secondary); margin-bottom: 15px; font-size: 1.2rem;">Bônus 2:<br>Inteligência Financeira na Prática</h4>
+                </div>
+                <div class="content-block animate-scroll delay-3" style="padding: 30px 25px; text-align: center;">
+                    <img src="bonus3.jpg" class="floating-book" alt="Capa Bônus 3">
+                    <h4 style="color: var(--secondary); margin-bottom: 15px; font-size: 1.2rem;">Bônus 3:<br>50 Ferramentas Gratuitas para Trabalhar pela Internet</h4>
+                </div>
+                <div class="content-block animate-scroll delay-1" style="padding: 30px 25px; text-align: center;">
+                    <img src="bonus4.jpg" class="floating-book" alt="Capa Bônus 4">
+                    <h4 style="color: var(--secondary); margin-bottom: 15px; font-size: 1.2rem;">Bônus 4:<br>Plano de Ação dos Primeiros 30 Dias</h4>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AUTOR -->
+    <section style="background: rgba(0, 240, 255, 0.03);">
+        <div class="container">
+            <h2 class="section-title animate-scroll">Quem está por trás do <span>Método Segunda Renda?</span></h2>
+            <div class="content-block animate-scroll" style="max-width: 800px; margin: 0 auto; text-align: left; padding: clamp(25px, 5vw, 50px);">
+                <div style="margin-bottom: 40px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; background: rgba(0,0,0,0.3); padding: 30px; border-radius: 16px; border: 1px solid rgba(255,0,127,0.2); text-align: center;">
+                    <img src="bruno.jpg" alt="Bruno Villas Lobos" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; object-position: top; border: 3px solid var(--primary); box-shadow: 0 0 20px var(--primary); flex-shrink: 0;">
+                    <div>
+                        <p style="font-weight: 700; font-size: 1.4rem; margin-bottom: 5px; color: #fff;">Bruno Villas Lobos</p>
+                        <p style="color: var(--secondary); font-size: 1rem; margin-bottom: 0; font-weight: 600;">Criador do Método Segunda Renda</p>
+                    </div>
+                </div>
+                
+                <p style="font-size: 1.2rem; margin-bottom: 25px;">Antes de te falar sobre qualquer curso, eu preciso te dizer uma verdade incômoda:</p>
+                
+                <p style="font-weight: 800; color: var(--primary); font-size: 1.4rem; margin-bottom: 25px; text-transform: uppercase;">Eu não acredito em dinheiro fácil.</p>
+                
+                <p>Se existisse um botão mágico para enriquecer da noite para o dia, todo mundo já teria apertado. A realidade que eu vejo todos os dias é muito diferente:</p>
+                
+                <ul style="list-style: none; padding: 0; margin: 25px 0; color: #ccc;">
+                    <li style="margin-bottom: 15px; display: flex; align-items: center; gap: 12px;">
+                        <svg class="scroll-gear" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="width: 22px; height: 22px; color: var(--primary); flex-shrink: 0; transition: transform 0.1s linear;">
+                            <path fill-rule="evenodd" d="M11.078 2.25c-.253-.82-1.393-.82-1.646 0l-.364 1.182c-.22.716-.948 1.161-1.69 1.053l-1.22-.178c-.85-.124-1.458.748-1.075 1.472l.582 1.1c.35.66.195 1.476-.363 1.944l-.946.793c-.66.554-.66 1.574 0 2.128l.946.793c.558.468.713 1.284.363 1.944l-.582 1.1c-.383.724-.225-1.596-1.075-1.472l1.22-.178c.742-.108 1.47.337 1.69 1.053l.364 1.182c.253.82 1.393.82 1.646 0l.364-1.182c.22-.716.948-1.161 1.69-1.053l1.22.178c.85.124 1.458-.748 1.075-1.472l-.582-1.1c-.35-.66-.195-1.476.363-1.944l.946-.793c.66-.554.66-1.574 0-2.128l-.946-.793c-.558-.468-.713-1.284-.363-1.944l.582-1.1c.383-.724-.225-1.596-1.075-1.472l-1.22.178c-.742.108-1.47-.337-1.69-1.053l-.364-1.182Z" clip-rule="evenodd" />
+                            <path fill-rule="evenodd" d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" clip-rule="evenodd" />
+                        </svg>
+                        <span>Pessoas acordando cedo e trabalhando exaustivamente;</span>
+                    </li>
+                    <li style="margin-bottom: 15px; display: flex; align-items: center; gap: 12px;">
+                        <svg class="scroll-gear" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="width: 22px; height: 22px; color: var(--primary); flex-shrink: 0; transition: transform 0.1s linear;">
+                            <path fill-rule="evenodd" d="M11.078 2.25c-.253-.82-1.393-.82-1.646 0l-.364 1.182c-.22.716-.948 1.161-1.69 1.053l-1.22-.178c-.85-.124-1.458.748-1.075 1.472l.582 1.1c.35.66.195 1.476-.363 1.944l-.946.793c-.66.554-.66 1.574 0 2.128l.946.793c.558.468.713 1.284.363 1.944l-.582 1.1c-.383.724-.225-1.596-1.075-1.472l1.22-.178c.742-.108 1.47.337 1.69 1.053l.364 1.182c.253.82 1.393.82 1.646 0l.364-1.182c.22-.716.948-1.161 1.69-1.053l1.22.178c.85.124 1.458-.748 1.075-1.472l-.582-1.1c-.35-.66-.195-1.476.363-1.944l.946-.793c.66-.554.66-1.574 0-2.128l-.946-.793c-.558-.468-.713-1.284-.363-1.944l.582-1.1c.383-.724-.225-1.596-1.075-1.472l-1.22.178c-.742.108-1.47-.337-1.69-1.053l-.364-1.182Z" clip-rule="evenodd" />
+                            <path fill-rule="evenodd" d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" clip-rule="evenodd" />
+                        </svg>
+                        <span>Fazendo horas extras que mal pagam os boletos;</span>
+                    </li>
+                    <li style="margin-bottom: 15px; display: flex; align-items: center; gap: 12px;">
+                        <svg class="scroll-gear" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="width: 22px; height: 22px; color: var(--primary); flex-shrink: 0; transition: transform 0.1s linear;">
+                            <path fill-rule="evenodd" d="M11.078 2.25c-.253-.82-1.393-.82-1.646 0l-.364 1.182c-.22.716-.948 1.161-1.69 1.053l-1.22-.178c-.85-.124-1.458.748-1.075 1.472l.582 1.1c.35.66.195 1.476-.363 1.944l-.946.793c-.66.554-.66 1.574 0 2.128l.946.793c.558.468.713 1.284.363 1.944l-.582 1.1c-.383.724-.225-1.596-1.075-1.472l1.22-.178c.742-.108 1.47.337 1.69 1.053l.364 1.182c.253.82 1.393.82 1.646 0l.364-1.182c.22-.716.948-1.161 1.69-1.053l1.22.178c.85.124 1.458-.748 1.075-1.472l-.582-1.1c-.35-.66-.195-1.476.363-1.944l.946-.793c.66-.554.66-1.574 0-2.128l-.946-.793c-.558-.468-.713-1.284-.363-1.944l.582-1.1c.383-.724-.225-1.596-1.075-1.472l-1.22.178c-.742.108-1.47-.337-1.69-1.053l-.364-1.182Z" clip-rule="evenodd" />
+                            <path fill-rule="evenodd" d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" clip-rule="evenodd" />
+                        </svg>
+                        <span>Chegando ao fim do mês sem conseguir guardar R$ 1.</span>
+                    </li>
+                </ul>
+                
+                <p class="highlight-text" style="font-size: 1.15rem; padding: 20px; border-radius: 12px; background: rgba(255,0,127,0.1); border-left: 4px solid var(--primary); margin: 30px 0;">
+                    O problema não é preguiça. O problema é que <strong>depender de apenas uma única fonte de renda é a maior insegurança financeira da nossa geração.</strong>
+                </p>
+                
+                <p>Foi exatamente para resolver isso que criei o <strong>Método Segunda Renda</strong>. Não para vender ilusões de carros de luxo ou viagens para Dubai...</p>
+                
+                <p style="margin-top: 15px;">Mas para te ensinar uma <strong>habilidade digital real</strong> que movimenta bilhões todos os anos e pode ser aprendida por qualquer pessoa, mesmo começando do zero.</p>
+                
+                <p style="margin-top: 25px;">Se você procura promessas milagrosas, este treinamento definitivamente não é para você. Mas se você está disposto a aprender e aplicar algo novo com responsabilidade, seja muito bem-vindo.</p>
+                
+                <div style="background: rgba(0, 240, 255, 0.05); padding: 25px; border-radius: 16px; margin: 35px 0; border: 1px solid rgba(0, 240, 255, 0.2);">
+                    <p style="font-style: italic; color: #fff; font-size: 1.2rem; margin: 0; text-align: center;">
+                        "O seu futuro financeiro muda quando você deixa de depender apenas do salário e passa a <span style="color: var(--secondary); font-weight: 700;">desenvolver habilidades que o mercado valoriza.</span>"
+                    </p>
+                </div>
+                
+                <p style="text-align: center; font-weight: 700; font-size: 1.2rem;">Estou aqui para te mostrar o caminho. Vamos juntos?</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- DEPOIMENTOS -->
+    <section class="testimonials-section">
+        <div class="container" style="max-width: 100%; padding: 0;">
+            <h2 class="section-title animate-scroll" style="margin-bottom: 50px;">Veja quem já aplicou o <span>Método Segunda Renda</span></h2>
+            
+            <div class="carousel-wrapper">
+                <!-- Row 1: Left Scroll -->
+                <div class="carousel-track track-left">
+                    <!-- Original -->
+                    <div class="testimonial-card"><img src="depo1.png" alt="Depoimento 1"></div>
+                    <div class="testimonial-card"><img src="depo2.png" alt="Depoimento 2"></div>
+                    <div class="testimonial-card"><img src="depo3.png" alt="Depoimento 3"></div>
+                    <div class="testimonial-card"><img src="depo4.png" alt="Depoimento 4"></div>
+                    <div class="testimonial-card"><img src="depo5.png" alt="Depoimento 5"></div>
+                    <!-- Duplicate for infinite scroll -->
+                    <div class="testimonial-card"><img src="depo1.png" alt="Depoimento 1"></div>
+                    <div class="testimonial-card"><img src="depo2.png" alt="Depoimento 2"></div>
+                    <div class="testimonial-card"><img src="depo3.png" alt="Depoimento 3"></div>
+                    <div class="testimonial-card"><img src="depo4.png" alt="Depoimento 4"></div>
+                    <div class="testimonial-card"><img src="depo5.png" alt="Depoimento 5"></div>
+                </div>
+
+                <!-- Row 2: Right Scroll -->
+                <div class="carousel-track track-right">
+                    <!-- Original -->
+                    <div class="testimonial-card"><img src="depo6.png" alt="Depoimento 6"></div>
+                    <div class="testimonial-card"><img src="depo7.png" alt="Depoimento 7"></div>
+                    <div class="testimonial-card"><img src="depo8.png" alt="Depoimento 8"></div>
+                    <div class="testimonial-card"><img src="depo9.png" alt="Depoimento 9"></div>
+                    <div class="testimonial-card"><img src="depo10.png" alt="Depoimento 10"></div>
+                    <!-- Duplicate for infinite scroll -->
+                    <div class="testimonial-card"><img src="depo6.png" alt="Depoimento 6"></div>
+                    <div class="testimonial-card"><img src="depo7.png" alt="Depoimento 7"></div>
+                    <div class="testimonial-card"><img src="depo8.png" alt="Depoimento 8"></div>
+                    <div class="testimonial-card"><img src="depo9.png" alt="Depoimento 9"></div>
+                    <div class="testimonial-card"><img src="depo10.png" alt="Depoimento 10"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- IMAGINE... E OFERTA -->
+    <section id="oferta" style="background: radial-gradient(circle at 50% 50%, rgba(255,0,127,0.1) 0%, transparent 100%);">
+        <div class="container">
+            
+            <div class="text-center animate-scroll" style="margin-bottom: 60px;">
+                <h2 class="section-title">Imagine daqui a <span>alguns meses...</span></h2>
+                <p style="font-size: 1.2rem; margin-bottom: 30px;">Continuar dependendo exclusivamente do salário... <br>Ou possuir uma habilidade que pode abrir novas possibilidades de renda sempre que você precisar.</p>
+                <p style="font-size: 1.5rem; font-weight: 700; color: var(--secondary);">A decisão começa hoje.</p>
+            </div>
+
+            <div class="text-center animate-scroll" style="margin-bottom: 60px;">
+                <h2 class="section-title">Tudo o que <span>você recebe</span></h2>
+                
+                <div class="content-block" style="max-width: 600px; margin: 0 auto; text-align: left;">
+                    <ul class="benefit-list" style="margin-bottom: 0;">
+                        <li style="background: transparent; border: none; padding: 5px;">Método Segunda Renda.</li>
+                        <li style="background: transparent; border: none; padding: 5px;">4 bônus exclusivos.</li>
+                        <li style="background: transparent; border: none; padding: 5px;">Atualizações.</li>
+                        <li style="background: transparent; border: none; padding: 5px;">Acesso imediato.</li>
+                        <li style="background: transparent; border: none; padding: 5px;">Garantia de 7 dias.</li>
+                    </ul>
+                    <div style="border-top: 2px solid var(--primary); padding-top: 20px; margin-top: 20px; text-align: center;">
+                        <span style="font-size: 1.2rem;">Valor percebido: <span style="color: var(--danger); text-decoration: line-through; font-weight: 700;">R$497</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pricing-box animate-scroll">
+                <p style="color: white; font-weight: 600; font-size: 1.5rem; margin-bottom: 10px;">HOJE</p>
+                <p style="font-size: 1.2rem; margin-bottom: -10px;">Apenas</p>
+                <div class="price">R$ 19,90</div>
+                
+                <p style="font-size: 1.1rem; color: #fff; margin: 30px 0; line-height: 1.4;">Você não está comprando apenas um curso.<br><span style="color: var(--primary); font-weight: 700;">Está dando o primeiro passo para deixar de depender de uma única fonte de renda.</span></p>
+
+                <a href="https://pay.kiwify.com.br/GSTfiod?SRC=INSTA" class="cta-button" style="display: block;">QUERO COMEÇAR AGORA</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Customizado -->
+    <section>
+        <div class="container animate-scroll">
+            <h2 class="section-title" style="font-size: 2.2rem;">Antes de começar, quero responder as mesmas <span>dúvidas que eu teria no seu lugar.</span></h2>
+            <div style="max-width: 800px; margin: 0 auto;">
+                <div class="faq-item" onclick="this.classList.toggle('active')">
+                    <div class="faq-question">1. Isso é mais uma promessa de dinheiro fácil?</div>
+                    <div class="faq-answer">
+                        <p>Não.</p>
+                        <p>O Método Segunda Renda não promete enriquecer da noite para o dia.</p>
+                        <p>Na verdade, ele parte de uma ideia muito simples: aprender uma habilidade que empresas já pagam para utilizar.</p>
+                        <p>Assim como qualquer profissão, você precisará estudar, praticar e evoluir. O objetivo não é vender ilusões, mas mostrar um caminho real para quem deseja construir uma segunda fonte de renda.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item" onclick="this.classList.toggle('active')">
+                    <div class="faq-question">2. Nunca trabalhei pela internet. Mesmo assim consigo aprender?</div>
+                    <div class="faq-answer">
+                        <p>Sim.</p>
+                        <p>O treinamento foi criado justamente para quem está começando do absoluto zero.</p>
+                        <p>Você não precisa entender de marketing digital, tecnologia ou vendas online.</p>
+                        <p>Tudo é explicado passo a passo, em uma linguagem simples e prática.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item" onclick="this.classList.toggle('active')">
+                    <div class="faq-question">3. Eu trabalho o dia inteiro. Será que vou ter tempo?</div>
+                    <div class="faq-answer">
+                        <p>Essa é a realidade da maioria dos nossos alunos.</p>
+                        <p>Você pode estudar no seu próprio ritmo, nos horários disponíveis, sem precisar abandonar seu emprego.</p>
+                        <p>A ideia é construir uma segunda fonte de renda enquanto continua tendo sua renda principal.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item" onclick="this.classList.toggle('active')">
+                    <div class="faq-question">4. Preciso aparecer nas redes sociais ou gravar vídeos?</div>
+                    <div class="faq-answer">
+                        <p>Não.</p>
+                        <p>O Método Segunda Renda foi desenvolvido para quem quer aprender uma habilidade digital sem depender de ser influenciador.</p>
+                        <p>Você não precisa gravar vídeos, fazer lives ou mostrar sua rotina na internet.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item" onclick="this.classList.toggle('active')">
+                    <div class="faq-question">5. Já comprei outros cursos e não tive resultado. Qual a diferença?</div>
+                    <div class="faq-answer">
+                        <p>Entendemos essa preocupação.</p>
+                        <p>Muitas pessoas chegam até aqui depois de experiências frustrantes.</p>
+                        <p>Por isso, o Método Segunda Renda não vende atalhos nem fórmulas milagrosas.</p>
+                        <p>Você aprenderá uma habilidade prática e valorizada pelo mercado, com um método organizado para facilitar a aplicação desde o início.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item" onclick="this.classList.toggle('active')">
+                    <div class="faq-question">6. E se eu comprar e perceber que não era o que eu esperava?</div>
+                    <div class="faq-answer">
+                        <p>Você compra com tranquilidade.</p>
+                        <p>Após a confirmação do pagamento, terá acesso imediato ao treinamento e poderá conhecer todo o conteúdo.</p>
+                        <p>Se dentro do prazo de 7 dias entender que o Método Segunda Renda não faz sentido para você, basta solicitar o reembolso conforme nossa política de garantia.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item" onclick="this.classList.toggle('active')">
+                    <div class="faq-question">7. Vale mesmo a pena investir R$ 19,90?</div>
+                    <div class="faq-answer">
+                        <p>Essa talvez seja a pergunta mais importante.</p>
+                        <p>Pense em quanto custa continuar exatamente onde você está.</p>
+                        <p>Continuar dependendo de uma única fonte de renda.</p>
+                        <p>Continuar adiando o aprendizado de uma habilidade que pode abrir novas oportunidades no futuro.</p>
+                        <p>Por menos do que o valor de uma pizza, você terá acesso a um método completo para começar a desenvolver uma competência que pode acompanhar você por muitos anos.</p>
+                        <p style="color: var(--secondary); font-weight: 700; margin-top: 15px;">O maior investimento não é o valor do curso.<br>É decidir dar o primeiro passo.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer style="text-align: center; padding: 40px; border-top: 1px solid rgba(0,240,255,0.2); color: var(--text-muted); font-size: 0.9rem;">
+        <p>&copy; 2024 Método Segunda Renda.</p>
+    </footer>
+
+    <script>
+        // --- SCROLL ANIMATIONS (Intersection Observer) ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    // Gear effect: create floating gear when section becomes visible
+                    createGearParticle(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.animate-scroll').forEach(el => observer.observe(el));
+
+        // --- GEAR PARTICLES EFFECT ---
+        function createGearParticle(element) {
+            const particle = document.createElement('div');
+            particle.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path fill-rule="evenodd" d="M11.078 2.25c-.253-.82-1.393-.82-1.646 0l-.364 1.182c-.22.716-.948 1.161-1.69 1.053l-1.22-.178c-.85-.124-1.458.748-1.075 1.472l.582 1.1c.35.66.195 1.476-.363 1.944l-.946.793c-.66.554-.66 1.574 0 2.128l.946.793c.558.468.713 1.284.363 1.944l-.582 1.1c-.383.724-.225-1.596-1.075-1.472l1.22-.178c.742-.108 1.47.337 1.69 1.053l.364 1.182c.253.82 1.393.82 1.646 0l.364-1.182c.22-.716.948-1.161 1.69-1.053l1.22.178c.85.124 1.458-.748 1.075-1.472l-.582-1.1c-.35-.66-.195-1.476.363-1.944l.946-.793c.66-.554.66-1.574 0-2.128l-.946-.793c-.558-.468-.713-1.284-.363-1.944l.582-1.1c.383-.724-.225-1.596-1.075-1.472l-1.22.178c-.742.108-1.47-.337-1.69-1.053l-.364-1.182Z" clip-rule="evenodd" />
+                <path fill-rule="evenodd" d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" clip-rule="evenodd" />
+            </svg>`;
+            particle.className = 'gear-particle';
+            
+            // Random position relative to the element
+            const rect = element.getBoundingClientRect();
+            const startX = Math.random() * rect.width;
+            
+            particle.style.left = `${startX}px`;
+            particle.style.top = `0px`;
+            
+            element.style.position = 'relative'; // Ensure relative positioning
+            element.appendChild(particle);
+
+            // Animate it floating up, spinning, and fading
+            setTimeout(() => {
+                particle.style.opacity = '1';
+                // random rotation direction
+                const rotate = Math.random() > 0.5 ? 360 : -360;
+                particle.style.transform = `translateY(-120px) rotate(${rotate}deg) scale(1.5)`;
+                particle.style.transition = 'all 2s cubic-bezier(0.2, 0.8, 0.2, 1)';
+            }, 50);
+
+            // Remove after animation
+            setTimeout(() => {
+                particle.remove();
+            }, 2050);
+        }
+
+        // Gears Scroll Animation
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+            const gears = document.querySelectorAll('.scroll-gear');
+            gears.forEach((gear, index) => {
+                // Alternar a direção do giro para engrenagens adjacentes parecerem conectadas
+                const direction = index % 2 === 0 ? 1 : -1;
+                const speed = 0.5; // Velocidade do giro
+                gear.style.transform = `rotate(${scrollY * speed * direction}deg)`;
+            });
+        });
+    </script>
+</body>
+</html>
